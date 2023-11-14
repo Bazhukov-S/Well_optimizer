@@ -21,10 +21,31 @@ class InclinometryFormat():
         df['Well_name'] = df['Well_name'].astype('object')
         df['Field'] = df['Field'].astype('object')
 
-        df.to_csv('Format_Incinometry.csv')
+        df.to_csv('Format_Inclinometry.csv')
         return print('Форматирования Инклинометрии завершено')
 
-path = "E:\\Work\\Well_calc_optim\\Well_optimizer\\ТР.7z\\ТР\\Inclin.xlsx"
+class TRFormat():
 
-test = InclinometryFormat(path, 0)
+    def __init__(self, non_corr_path, list_num):
+        self.non_corr_path = non_corr_path
+        self.list_num = list_num
+    
+    def create_corr_csv(self, sheet_name=1, header=25, usecols="A:CX"):
+        df = pd.read_excel(self.non_corr_path, sheet_name=sheet_name, header=header, usecols=usecols)
+        new_columns = df.columns + ', ' + df.iloc[0].astype(str)
+        df.columns = new_columns
+        # Удаляем первые две строки
+        df = df.drop([0, 1])
+
+        # Обновляем индексы
+        df = df.reset_index(drop=True)
+
+        df.to_csv('Format_TR.csv')
+        return print('Форматирования Тех Режима завершено')
+
+
+
+path = "C:\WORK\Well_Optimizer\Well_optimizer\ТР.7z\ТР\TR.xlsx"
+
+test = TRFormat(path, 1)
 test.create_corr_csv()
